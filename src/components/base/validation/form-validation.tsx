@@ -2,29 +2,23 @@ import Vue from 'vue';
 
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
+import { CreateElement } from 'vue/types/umd';
 
 @Component
 export default class FormValidation extends Vue {
   @Prop() validationArguments!: any
   @Prop() value!: string;
+  requireMessage: any;
 
-  async required() {
-    const requireMessage = this.$t('general.form.input.required');
-    return Promise.resolve(
-      <div>
-        {requireMessage}
-      </div>
-    );
+  mounted() {
+    Promise.resolve(this.$t('general.form.input.required')).then((r) => {
+      this.requireMessage = r;
+      this.$forceUpdate();
+    });
+
   }
 
-  async render() {
-    return (<div>
-      {
-        await this.required().then((r) => {
-          return (<span>{r}</span>);
-        })
-      }
-  </div>);
-
+  render(h: CreateElement) {
+    return (<div>test {this.requireMessage}</div>);
   }
 }
